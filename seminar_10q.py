@@ -24,12 +24,14 @@ from sec_parser import TopSectionTitle
 try:
     from rich.console import Console
     from rich.tree import Tree as RichTree
+
     RICH_AVAILABLE = True
 except ImportError:
     RICH_AVAILABLE = False
 
 try:
     from google import genai
+
     GENAI_AVAILABLE = True
 except ImportError:
     GENAI_AVAILABLE = False
@@ -54,6 +56,7 @@ SEC_HEADERS = {
 # ---------------------------------------------------------------------------
 # Helpers
 # ---------------------------------------------------------------------------
+
 
 def get_cik(ticker: str) -> str:
     """
@@ -229,7 +232,9 @@ else:
     if len(words) > word_limit:
         mdna_text = " ".join(words[:word_limit]) + "\n\n[... truncated for length ...]"
 
-    print(f"  MD&A section found ({len(mdna_text.split()):,} words). Sending to Gemini…\n")
+    print(
+        f"  MD&A section found ({len(mdna_text.split()):,} words). Sending to Gemini…\n"
+    )
 
     if not GENAI_AVAILABLE:
         print("  [!] google-genai is not installed.")
@@ -263,11 +268,11 @@ Summary:"""
         )
         summary = response.text
 
-        print("â”€" * 65)
+        print("=" * 65)
         print("  GEMINI SUMMARY OF MD&A")
-        print("â”€" * 65)
+        print("=" * 65)
         print(summary)
-        print("â”€" * 65 + "\n")
+        print("=" * 65 + "\n")
 
 # ---------------------------------------------------------------------------
 # Step 4 “ Parse income statement and graph as time series
@@ -297,12 +302,12 @@ def _parse_number(text: str):
 import re as _re
 
 # -- Colour palette ----------------------------------------------------------
-BG       = "#0b0b0f"   # near-black background
-PANEL    = "#13131a"   # slightly lighter panel
-PURPLE   = "#9b59f5"   # accent purple
-BLUE     = "#4e8ef7"   # accent blue
-GRAY_LT  = "#9aa0b4"   # light gray text
-GRAY_MID = "#3a3a4d"   # mid gray grid / spines
+BG = "#0b0b0f"  # near-black background
+PANEL = "#13131a"  # slightly lighter panel
+PURPLE = "#9b59f5"  # accent purple
+BLUE = "#4e8ef7"  # accent blue
+GRAY_LT = "#9aa0b4"  # light gray text
+GRAY_MID = "#3a3a4d"  # mid gray grid / spines
 
 
 def _find_balance_sheet_table(soup):
@@ -310,7 +315,7 @@ def _find_balance_sheet_table(soup):
 
     def _score(text_rows):
         all_labels = " ".join(r[0].lower() if r else "" for r in text_rows)
-        s  = 3 if "total liabilities" in all_labels else 0
+        s = 3 if "total liabilities" in all_labels else 0
         s += 3 if "stockholders" in all_labels or "total equity" in all_labels else 0
         hdr = " ".join(" ".join(r) for r in text_rows[:5]).lower()
         s += sum(1 for h in DATE_HINTS if h in hdr)
@@ -321,8 +326,10 @@ def _find_balance_sheet_table(soup):
         tr_list = table.find_all("tr")
         if len(tr_list) < 5:
             continue
-        text_rows = [[td.get_text(" ", strip=True) for td in r.find_all(["td", "th"])]
-                     for r in tr_list]
+        text_rows = [
+            [td.get_text(" ", strip=True) for td in r.find_all(["td", "th"])]
+            for r in tr_list
+        ]
         sc = _score(text_rows)
         if sc > best_score:
             best_score, best_rows = sc, text_rows
@@ -355,23 +362,35 @@ def _find_balance_sheet_table(soup):
 
 def _extract_date_ddmmyy(text):
     MONTHS = {
-        "january": "01", "february": "02", "march": "03", "april": "04",
-        "may": "05", "june": "06", "july": "07", "august": "08",
-        "september": "09", "october": "10", "november": "11", "december": "12",
+        "january": "01",
+        "february": "02",
+        "march": "03",
+        "april": "04",
+        "may": "05",
+        "june": "06",
+        "july": "07",
+        "august": "08",
+        "september": "09",
+        "october": "10",
+        "november": "11",
+        "december": "12",
     }
     t = text.strip()
     m = _re.search(
         r"(january|february|march|april|may|june|july|august"
         r"|september|october|november|december)\s+(\d{1,2})[,\s]+(\d{4})",
-        t, _re.IGNORECASE,
+        t,
+        _re.IGNORECASE,
     )
     if m:
         return "{}/{}/{}".format(
-            m.group(2).zfill(2), MONTHS[m.group(1).lower()], m.group(3)[-2:])
+            m.group(2).zfill(2), MONTHS[m.group(1).lower()], m.group(3)[-2:]
+        )
     m2 = _re.search(r"(\d{1,2})/(\d{1,2})/(\d{2,4})", t)
     if m2:
         return "{}/{}/{}".format(
-            m2.group(2).zfill(2), m2.group(1).zfill(2), m2.group(3)[-2:])
+            m2.group(2).zfill(2), m2.group(1).zfill(2), m2.group(3)[-2:]
+        )
     m3 = _re.search(r"(\d{4})-(\d{2})-(\d{2})", t)
     if m3:
         return "{}/{}/{}".format(m3.group(3), m3.group(2), m3.group(1)[-2:])
@@ -391,8 +410,11 @@ try:
     else:
         # Find Total Liabilities (not the grand total that includes equity)
         liab_key = next(
-            (k for k in bs_rows
-             if "total liabilit" in k and "equity" not in k and "assets" not in k),
+            (
+                k
+                for k in bs_rows
+                if "total liabilit" in k and "equity" not in k and "assets" not in k
+            ),
             None,
         )
 
@@ -413,9 +435,12 @@ try:
                 break
         if eq_key is None:
             eq_key = next(
-                (k for k in bs_rows
-                 if ("stockholder" in k or "total equity" in k)
-                 and any(w in k for w in ("equity", "deficit"))),
+                (
+                    k
+                    for k in bs_rows
+                    if ("stockholder" in k or "total equity" in k)
+                    and any(w in k for w in ("equity", "deficit"))
+                ),
                 None,
             )
 
@@ -425,7 +450,7 @@ try:
             print(f"      eq_key found  : {eq_key!r}")
             print(f"      Available rows: {list(bs_rows.keys())[:20]}\n")
         else:
-            raw_labels  = [h.strip() for h in bs_headers[1:] if h.strip()]
+            raw_labels = [h.strip() for h in bs_headers[1:] if h.strip()]
             date_labels = [_extract_date_ddmmyy(h) for h in raw_labels]
             n = len(date_labels)
 
@@ -434,7 +459,7 @@ try:
                 return out + [None] * (count - len(out))
 
             liab_vals = _pick(bs_rows[liab_key], n)
-            eq_vals   = _pick(bs_rows[eq_key],   n)
+            eq_vals = _pick(bs_rows[eq_key], n)
 
             de_ratios = []
             for l_v, e_v in zip(liab_vals, eq_vals):
@@ -445,6 +470,7 @@ try:
 
             # Sort everything into chronological order (oldest → newest)
             from datetime import datetime as _dt
+
             def _to_sortable(label):
                 """Parse a date label back to a datetime for sorting.
                 Handles DD/MM/YY and bare year strings like '2024'."""
@@ -469,7 +495,7 @@ try:
             print(f"  Equity          : {eq_vals}")
             print(f"  D/E Ratios      : {de_ratios}\n")
 
-            x      = list(range(n))
+            x = list(range(n))
             y_vals = [abs(v) if v is not None else 0 for v in de_ratios]
 
             fig, ax = plt.subplots(figsize=(10, 6))
@@ -477,57 +503,84 @@ try:
             ax.set_facecolor(PANEL)
 
             bar_colors = [PURPLE if i < n - 1 else BLUE for i in range(n)]
-            bars = ax.bar(x, y_vals, color=bar_colors, width=0.5,
-                          zorder=3, edgecolor=GRAY_MID, linewidth=0.8)
- 
+            bars = ax.bar(
+                x,
+                y_vals,
+                color=bar_colors,
+                width=0.5,
+                zorder=3,
+                edgecolor=GRAY_MID,
+                linewidth=0.8,
+            )
+
             for bar, val in zip(bars, de_ratios):
                 if val is not None and max(y_vals) > 0:
                     ax.text(
                         bar.get_x() + bar.get_width() / 2,
                         bar.get_height() + max(y_vals) * 0.02,
                         f"{val:.2f}x",
-                        ha="center", va="bottom",
-                        color=GRAY_LT, fontsize=10, fontweight="bold",
+                        ha="center",
+                        va="bottom",
+                        color=GRAY_LT,
+                        fontsize=10,
+                        fontweight="bold",
                     )
 
             y_line = [abs(v) if v is not None else float("nan") for v in de_ratios]
-            ax.plot(x, y_line, color=BLUE, linewidth=2, linestyle="--",
-                    marker="o", markersize=7, zorder=4)
+            ax.plot(
+                x,
+                y_line,
+                color=BLUE,
+                linewidth=2,
+                linestyle="--",
+                marker="o",
+                markersize=7,
+                zorder=4,
+            )
 
             if n >= 2 and de_ratios[-1] is not None and de_ratios[-2] is not None:
                 delta = de_ratios[-1] - de_ratios[-2]
-                arr   = "\u25b2" if delta > 0 else "\u25bc"
-                acol  = "#e74c3c" if delta > 0 else "#2ecc71"
-                
+                arr = "\u25b2" if delta > 0 else "\u25bc"
+                acol = "#e74c3c" if delta > 0 else "#2ecc71"
 
             ax.axhline(0, color=GRAY_MID, linewidth=0.8, linestyle=":")
             ax.set_xticks(x)
             ax.set_xticklabels(date_labels, color=GRAY_LT, fontsize=11)
-            ax.set_ylabel("D/E Ratio  (Total Liabilities / Total Equity)",
-                          color=GRAY_LT, fontsize=10)
+            ax.set_ylabel(
+                "D/E Ratio  (Total Liabilities / Total Equity)",
+                color=GRAY_LT,
+                fontsize=10,
+            )
             ax.tick_params(axis="y", colors=GRAY_LT)
             ax.tick_params(axis="x", colors=GRAY_LT)
             ax.yaxis.set_major_formatter(
-                mticker.FuncFormatter(lambda v, _: f"{v:.1f}x"))
+                mticker.FuncFormatter(lambda v, _: f"{v:.1f}x")
+            )
             for spine in ax.spines.values():
                 spine.set_color(GRAY_MID)
-            ax.yaxis.grid(True, color=GRAY_MID, linewidth=0.5,
-                          linestyle="--", alpha=0.5)
+            ax.yaxis.grid(
+                True, color=GRAY_MID, linewidth=0.5, linestyle="--", alpha=0.5
+            )
             ax.set_axisbelow(True)
 
             from matplotlib.patches import Patch
+
             ax.legend(
                 handles=[
                     Patch(facecolor=PURPLE, label="Prior Quarter"),
-                    Patch(facecolor=BLUE,   label="Current Quarter"),
+                    Patch(facecolor=BLUE, label="Current Quarter"),
                 ],
-                facecolor=PANEL, edgecolor=GRAY_MID,
-                labelcolor=GRAY_LT, loc="upper left",
+                facecolor=PANEL,
+                edgecolor=GRAY_MID,
+                labelcolor=GRAY_LT,
+                loc="upper left",
             )
 
             plt.title(
                 f"{TICKER} - Debt-to-Equity Ratio  (Balance Sheet)",
-                color="white", fontsize=14, pad=15,
+                color="white",
+                fontsize=14,
+                pad=15,
             )
             plt.tight_layout()
             plot_path = "financial_trend.png"
@@ -536,7 +589,9 @@ try:
 
 except Exception as e:
     print(f"  [!] Error generating graph: {e}\n")
-    import traceback; traceback.print_exc()
+    import traceback
+
+    traceback.print_exc()
 # Hi
 # -nic and carter
 print("\nDone!")
