@@ -270,11 +270,11 @@ Summary:"""
         print("â”€" * 65 + "\n")
 
 # ---------------------------------------------------------------------------
-# Step 4 â€“ Parse income statement and graph as time series
+# Step 4 “ Parse income statement and graph as time series
 # ---------------------------------------------------------------------------
 
 print("=" * 65)
-print("  STEP 4 â€” Graphing Income Statement (Revenue & Net Income)")
+print("  STEP 4  ” Graphing Income Statement (Revenue & Net Income)")
 print("=" * 65 + "\n")
 
 
@@ -524,5 +524,6 @@ try:
 except Exception as e:
     print(f"  [!] Error generating graph: {e}\n")
     import traceback; traceback.print_exc()
-
+# Hi
+# -nic and carter
 print("\nDone!")
