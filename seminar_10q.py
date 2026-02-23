@@ -446,11 +446,14 @@ try:
             # Sort everything into chronological order (oldest → newest)
             from datetime import datetime as _dt
             def _to_sortable(label):
-                """Parse DD/MM/YY label back to a datetime for sorting."""
-                try:
-                    return _dt.strptime(label, "%d/%m/%y")
-                except Exception:
-                    return _dt.min
+                """Parse a date label back to a datetime for sorting.
+                Handles DD/MM/YY and bare year strings like '2024'."""
+                for fmt in ("%d/%m/%y", "%Y", "%y"):
+                    try:
+                        return _dt.strptime(label.strip(), fmt)
+                    except Exception:
+                        pass
+                return _dt.min
 
             combined = sorted(
                 zip(date_labels, liab_vals, eq_vals, de_ratios),
@@ -476,7 +479,7 @@ try:
             bar_colors = [PURPLE if i < n - 1 else BLUE for i in range(n)]
             bars = ax.bar(x, y_vals, color=bar_colors, width=0.5,
                           zorder=3, edgecolor=GRAY_MID, linewidth=0.8)
-
+ 
             for bar, val in zip(bars, de_ratios):
                 if val is not None and max(y_vals) > 0:
                     ax.text(
