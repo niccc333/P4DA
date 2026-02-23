@@ -1,4 +1,4 @@
-﻿"""
+"""
 seminar_10q.py
 ==============
 A seminar walkthrough for parsing SEC 10-Q filings with Python.
@@ -118,11 +118,11 @@ def download_filing_html(cik: str, accession: str, primary_doc: str) -> str:
 
 
 # ---------------------------------------------------------------------------
-# Step 1 â€“ Fetch the latest 10-Q
+# Step 1 – Fetch the latest 10-Q
 # ---------------------------------------------------------------------------
 
 print("\n" + "=" * 65)
-print(f"  STEP 1 â€” Fetching the latest {FORM_TYPE} for {TICKER}")
+print(f"  STEP 1 — Fetching the latest {FORM_TYPE} for {TICKER}")
 print("=" * 65)
 
 cik = get_cik(TICKER)
@@ -136,11 +136,11 @@ print(f"  Downloaded {len(html):,} characters of HTML.\n")
 
 
 # ---------------------------------------------------------------------------
-# Step 2 â€“ Parse with sec_parser and visualise the document tree
+# Step 2 – Parse with sec_parser and visualise the document tree
 # ---------------------------------------------------------------------------
 
 print("=" * 65)
-print("  STEP 2 â€” Parsing the filing and visualising the document tree")
+print("  STEP 2 — Parsing the filing and visualising the document tree")
 print("=" * 65 + "\n")
 
 with warnings.catch_warnings():
@@ -155,7 +155,7 @@ tree = sp.TreeBuilder().build(elements)
 def _preview(text: str, width: int = 60) -> str:
     """Return a clipped single-line preview of node text."""
     snippet = " ".join((text or "").split())
-    return snippet[:width] + ("â€¦" if len(snippet) > width else "")
+    return snippet[:width] + ("…" if len(snippet) > width else "")
 
 
 # sec_parser's sp.render() produces a ready-made indented tree string.
@@ -166,14 +166,14 @@ print()
 
 
 # ---------------------------------------------------------------------------
-# Step 3 â€“ Extract MD&A and summarise with Gemini
+# Step 3 – Extract MD&A and summarise with Gemini
 # ---------------------------------------------------------------------------
 
 print("=" * 65)
-print("  STEP 3 â€” Extracting MD&A and summarising with Gemini")
+print("  STEP 3 — Extracting MD&A and summarising with Gemini")
 print("=" * 65 + "\n")
 
-# â”€â”€ Find the MD&A section â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€
+# ── Find the MD&A section ────────────────────────────────────────────────────
 MDNA_KEYWORDS = [
     "management",
     "discussion",
@@ -229,7 +229,7 @@ else:
     if len(words) > word_limit:
         mdna_text = " ".join(words[:word_limit]) + "\n\n[... truncated for length ...]"
 
-    print(f"  MD&A section found ({len(mdna_text.split()):,} words). Sending to Geminiâ€¦\n")
+    print(f"  MD&A section found ({len(mdna_text.split()):,} words). Sending to Gemini…\n")
 
     if not GENAI_AVAILABLE:
         print("  [!] google-genai is not installed.")
@@ -244,7 +244,7 @@ else:
         prompt = f"""You are a financial analyst assistant.
 Below is the Management's Discussion & Analysis (MD&A) section from {TICKER}'s most recent 10-Q filing.
 
-Please provide a concise, plain-English summary (4â€“6 paragraphs) covering:
+Please provide a concise, plain-English summary (4–6 paragraphs) covering:
 1. Key business highlights and revenue drivers
 2. Notable changes in profitability or expenses
 3. Liquidity and capital resources
