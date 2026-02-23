@@ -1,4 +1,4 @@
-"""
+﻿"""
 seminar_10q.py
 ==============
 A seminar walkthrough for parsing SEC 10-Q filings with Python.
@@ -443,6 +443,22 @@ try:
                 else:
                     de_ratios.append(None)
 
+            # Sort everything into chronological order (oldest → newest)
+            from datetime import datetime as _dt
+            def _to_sortable(label):
+                """Parse DD/MM/YY label back to a datetime for sorting."""
+                try:
+                    return _dt.strptime(label, "%d/%m/%y")
+                except Exception:
+                    return _dt.min
+
+            combined = sorted(
+                zip(date_labels, liab_vals, eq_vals, de_ratios),
+                key=lambda t: _to_sortable(t[0]),
+            )
+            date_labels, liab_vals, eq_vals, de_ratios = map(list, zip(*combined))
+            n = len(date_labels)
+
             print(f"  Liabilities row : {liab_key!r}")
             print(f"  Equity row      : {eq_key!r}")
             print(f"  Dates (DD/MM/YY): {date_labels}")
@@ -479,13 +495,7 @@ try:
                 delta = de_ratios[-1] - de_ratios[-2]
                 arr   = "\u25b2" if delta > 0 else "\u25bc"
                 acol  = "#e74c3c" if delta > 0 else "#2ecc71"
-                ax.annotate(
-                    f"{arr} {abs(delta):.2f} vs prior quarter",
-                    xy=(x[-1], y_vals[-1]),
-                    xytext=(max(0, x[-1] - 0.7), y_vals[-1] + max(y_vals) * 0.14),
-                    color=acol, fontsize=10, fontweight="bold",
-                    arrowprops=dict(arrowstyle="->", color=acol, lw=1.5),
-                )
+                
 
             ax.axhline(0, color=GRAY_MID, linewidth=0.8, linestyle=":")
             ax.set_xticks(x)
