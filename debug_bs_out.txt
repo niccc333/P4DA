@@ -1,0 +1,86 @@
+﻿Fetching https://www.sec.gov/Archives/edgar/data/1050446/000119312525262568/mstr-20250930.htm
+
+Best score: 11
+
+  'cash and cash equivalents'
+    -> [None, 54285.0, None, None]
+  'restricted cash'
+    -> [None, 1915.0, None, None]
+  'accounts receivable, net'
+    -> [None, 113406.0, None, None]
+  'prepaid expenses and other current assets'
+    -> [None, 44345.0, None, None]
+  'total current assets'
+    -> [None, 213951.0, None, None]
+  'digital assets'
+    -> [None, 73205725.0, None, None]
+  'property and equipment, net'
+    -> [None, 29949.0, None, None]
+  'right-of-use assets'
+    -> [None, 49236.0, None, None]
+  'deposits and other assets'
+    -> [None, 114342.0, None, None]
+  'deferred tax assets, net'
+    -> [None, 5835.0, None, None]
+  'total assets'
+    -> [None, 73619038.0, None, None]
+  'accounts payable, accrued expenses, and operating lease liab'
+    -> [None, 48723.0, None, None]
+  'accrued compensation and employee benefits'
+    -> [None, 44514.0, None, None]
+  'accrued interest'
+    -> [None, 29896.0, None, None]
+  'current portion of long-term debt, net'
+    -> [None, 316.0, None, None]
+  'deferred revenue and advance payments'
+    -> [None, 200641.0, None, None]
+  'total current liabilities'
+    -> [None, 324090.0, None, None]
+  'long-term debt, net'
+    -> [None, 8173587.0, None, None]
+  'deferred revenue and advance payments'
+    -> [None, 3450.0, None, None]
+  'operating lease liabilities'
+    -> [None, 48162.0, None, None]
+  'other long-term liabilities'
+    -> [None, 4790.0, None, None]
+  'deferred tax liabilities'
+    -> [None, 6947911.0, None, None]
+  'total liabilities'
+    -> [None, 15501990.0, None, None]
+  '10.00 % series a perpetual strife preferred stock, $ 0.001 p'
+    -> [None, 1091342.0, None, None]
+  'variable rate series a perpetual stretch preferred stock, $ '
+    -> [None, 2473800.0, None, None]
+  '8.00 % series a perpetual strike preferred stock, $ 0.001 pa'
+    -> [None, 1193240.0, None, None]
+  '10.00 % series a perpetual stride preferred stock, $ 0.001 p'
+    -> [None, 1027948.0, None, None]
+  'total mezzanine equity'
+    -> [None, 5786330.0, None, None]
+  'preferred stock undesignated, $ 0.001 par value; 570,389 and'
+    -> [None, 0.0, None, None]
+  'class a common stock, $ 0.001 par value; 10,330,000 and 330,'
+    -> [None, 267.0, None, None]
+  'class b common stock, $ 0.001 par value; 165,000 shares auth'
+    -> [None, 20.0, None, None]
+  'additional paid-in capital'
+    -> [None, 33390487.0, None, None]
+  'accumulated other comprehensive loss'
+    -> [None, 5113.0, None, None]
+  'retained earnings (accumulated deficit)'
+    -> [None, 18945057.0, None, None]
+  'total stockholdersΓÇÖ equity'
+    -> [None, 52330718.0, None, None]
+  "total liabilities, mezzanine equity and stockholders' equity"
+    -> [None, 73619038.0, None, None]
+
+
+Liabilities search:
+  FOUND: 'total liabilities' -> [None, 15501990.0, None, None]
+  => liab_key = 'total liabilities'
+     values   = [None, 15501990.0, None, None]
+
+Equity search:
+  => eq_key = 'total stockholdersΓÇÖ equity'
+     values = [None, 52330718.0, None, None]

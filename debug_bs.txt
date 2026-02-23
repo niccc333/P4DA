@@ -1,0 +1,29 @@
+﻿python :   File 
+"<string>", line 13
+At line:1 char:1
++ python -c "
++ ~~~~~~~~~~~
+    + CategoryInfo   
+           : NotSpe  
+  cified: (  File    
+ "<string>", line    
+ 13:String) [],     
+RemoteException
+    + FullyQualified 
+   ErrorId : Native  
+  CommandError
+ 
+    url = f'https://w
+ww.sec.gov/Archives/e
+dgar/data/{int(cik)}/
+{accession.replace(" 
+-\,\\)}/{primary_doc}
+'
+                     
+                     
+                     
+                   ^
+SyntaxError: 
+unterminated string 
+literal (detected at 
+line 13)
